@@ -29,6 +29,7 @@ import ProfileDropdown from "@/components/profileDropdown/ProfileDropdown";
 import { LogIn, Menu } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import Image from "next/image";
+import { useEffect } from "react";
 
 interface MenuItem {
   title: string;
@@ -77,9 +78,15 @@ const Navbar1 = ({
     login: { title: "Login", url: "/login" },
   },
 }: Navbar1Props) => {
-  const { user, isLoading } = useUser();
-  console.log(user, isLoading);
-
+  const { user, myInfo } = useUser();
+  useEffect(() => {
+    const justLoggedIn = sessionStorage.getItem("justLoggedIn");
+    if (justLoggedIn) {
+      sessionStorage.removeItem("justLoggedIn");
+      window.location.reload();
+    }
+  }, []);
+  console.log(myInfo?.profileImage);
   return (
     <section className="box-shadow py-4">
       <div className="max-w-5xl mx-auto px-5 ">
@@ -89,6 +96,7 @@ const Navbar1 = ({
             {/* Logo */}
             <a href={logo.url} className="flex items-center gap-2">
               {/* <img src={logo.src} className="max-h-8" alt={logo.alt} /> */}
+
               <Image
                 src={logo.src}
                 alt={logo.alt}

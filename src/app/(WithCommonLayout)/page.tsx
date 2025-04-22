@@ -7,7 +7,6 @@ import React from "react";
 
 const HomePage = async () => {
   const { data } = await getSixMenus();
-  console.log(data);
   const mealProvider = await getAllProvider();
 
   return (

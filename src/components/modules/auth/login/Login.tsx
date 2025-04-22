@@ -11,7 +11,7 @@ import { z } from "zod";
 import { loginSchema } from "./login.zodValidactionSchema";
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/ui/Loading/Loader";
-import { loginUser } from "@/services/Auth/authServices";
+import { forgetPassword, loginUser } from "@/services/Auth/authServices";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -23,7 +23,6 @@ type loginSchema = z.infer<typeof loginSchema>;
 export function LoginForm() {
   const router = useRouter();
   const { setIsLoading } = useUser();
-
   const form = useForm<loginSchema>({
     resolver: zodResolver(loginSchema),
   });
@@ -54,15 +53,15 @@ export function LoginForm() {
 
     try {
       const result = await loginUser(userData);
-      // await getCurrentUser();
+      setIsLoading(true);
       if (result?.success) {
         toast.success(result.message || "Login successful", { id: toastId });
+        sessionStorage.setItem("justLoggedIn", "true");
         if (redirect) {
           router.push(redirect);
         } else {
           router.push("/");
         }
-        setIsLoading(true);
       } else {
         toast.error(result?.message || "Login failed. Please try again.", {
           id: toastId,
@@ -70,6 +69,19 @@ export function LoginForm() {
       }
     } catch (error: any) {
       return Error(error);
+    }
+  };
+  const handelForgetPassword = async () => {
+    if (email) {
+      const userEmail = {
+        email: email,
+      };
+      const result = await forgetPassword(userEmail);
+      if (result.success) {
+        toast.success(`${result.message} Please Check Email`);
+      } else {
+        toast.message("please input email");
+      }
     }
   };
 
@@ -123,13 +135,21 @@ export function LoginForm() {
             <ErrorMsg msg={errors.password?.message} />
           </LabelInputContainer>
 
-          <div className="pb-5 -mt-2.5">
-            <Checkbox onClick={() => setShowPassword(!showPassword)} />
-            <span className="ml-2.5">
-              {showPassword ? "Hide Password" : "Show Password"}
-            </span>
+          <div className="flex justify-between items-center pb-5">
+            <div className="">
+              <Checkbox onClick={() => setShowPassword(!showPassword)} />
+              <span className="ml-2.5">
+                {showPassword ? "Hide Password" : "Show Password"}
+              </span>
+            </div>
+            <button
+              onClick={handelForgetPassword}
+              type="button"
+              className="text-blue-600 cursor-pointer"
+            >
+              Forget Password
+            </button>
           </div>
-
           <Button
             disabled={isDisabled}
             className="w-full cursor-pointer"

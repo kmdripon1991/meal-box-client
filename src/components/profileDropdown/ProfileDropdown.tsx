@@ -15,7 +15,8 @@ import { useUser } from "@/context/UserContext";
 import { logout } from "@/services/Auth/authServices";
 
 const ProfileDropdown = () => {
-  const { setIsLoading } = useUser();
+  const { setIsLoading, user } = useUser();
+
   const handleLogout = () => {
     logout();
     setIsLoading(true);
@@ -44,15 +45,18 @@ const ProfileDropdown = () => {
           <Link href={"/dashboard/user/view-profile"}>
             <DropdownMenuItem>Profile</DropdownMenuItem>
           </Link>
-          <Link href={"/dashboard/meal-provider/my-meal-provider"}>
-            <DropdownMenuItem>My Shop</DropdownMenuItem>
-          </Link>
+          {user?.role === "mealProvider" && (
+            <Link href={"/dashboard/meal-provider/my-meal-provider"}>
+              <DropdownMenuItem>My Shop</DropdownMenuItem>
+            </Link>
+          )}
+
           <Link href={"/dashboard/order/my-order"}>
             <DropdownMenuItem>My Order</DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout}>
-            <Button className="bg-purple-500 text-white w-full">
+            <Button className="bg-red-600 text-white w-full">
               <span className="flex gap-1.5 items-center">
                 Log out <LogIn className="text-white" />
               </span>

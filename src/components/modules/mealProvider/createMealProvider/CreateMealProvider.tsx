@@ -25,6 +25,7 @@ import { createProvider } from "@/services/Provider/providerSurvices";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import LoadingButton from "@/components/ui/Loading/Loader";
+import { logout } from "@/services/Auth/authServices";
 
 const DAYS_OF_WEEK = [
   "Monday",
@@ -130,7 +131,6 @@ const CreateMealProviderForm = () => {
         : [],
     };
 
-    
     try {
       const formData = new FormData();
       formData.append("data", JSON.stringify(payloadData));
@@ -143,8 +143,8 @@ const CreateMealProviderForm = () => {
       if (result?.success) {
         //  setIsShop(true);
         toast.success(result?.message);
-
-        router.push("/dashboard");
+        await logout();
+        router.push("/login");
       } else {
         toast.error(result?.message);
       }

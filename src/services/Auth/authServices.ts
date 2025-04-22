@@ -64,7 +64,45 @@ export const getCurrentUser = async () => {
     return null;
   }
 };
+export const forgetPassword = async (data: any) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/forget-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    return res.json();
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+export const resetPassword = async (data: FieldValues, sortToken: string) => {
+  (await cookies()).set("access-token", sortToken);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access-token")!.value;
 
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    return res.json();
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
 // export const getMe = async () => {
 //   const cookyStore = await cookies();
 //   let token = cookyStore.get("access-token")!.value;

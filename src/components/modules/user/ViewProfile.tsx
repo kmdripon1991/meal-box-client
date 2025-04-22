@@ -21,9 +21,9 @@ const ViewProfile = ({ data }: { data: TUser }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6">
+    <div className="max-w-4xl mx-auto p-4 md:p-6 ">
       {/* Profile Card */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="bg-white rounded-xl shadow-md overflow-hidden box-shadow">
         {/* Profile Header */}
         <div className="bg-gradient-to-r from-blue-500 to-indigo-600 h-32 p-6 relative">
           <div className="absolute -bottom-12 left-6">

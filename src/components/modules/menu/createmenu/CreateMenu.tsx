@@ -77,15 +77,14 @@ export default function MenuAddForm() {
           },
         })),
       };
+
       formData.append("data", JSON.stringify(menuPayload));
       if (files.length > 0) {
         formData.append("file", files[0]);
       } else {
         throw new Error("Menu image is required");
       }
-
       const result = await createMenuByProvider(formData);
-      
       if (result?.success) {
         toast.success(result?.message);
         router.push("/dashboard/menu/my-menu");

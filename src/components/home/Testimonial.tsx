@@ -14,7 +14,6 @@ import {
 
 export const Testimonial = ({ mealProvider }: { mealProvider: any }) => {
   const mealProviderData = mealProvider?.data?.data || [];
-  console.log(mealProviderData);
 
   const renderStars = (rating: number) => {
     const validRating = Math.min(5, Math.max(0, Number(rating) || 0));

@@ -21,7 +21,6 @@ import Link from "next/link";
 // import { Pagination } from 'swiper/modules';
 
 export default function Slider({ sliderData }: { sliderData: any }) {
-  console.log(sliderData);
   return (
     <>
       <Swiper
@@ -148,7 +147,7 @@ export default function Slider({ sliderData }: { sliderData: any }) {
                     )}
                   </div>
                   <Link href={`/details-menu/${menu._id}`}>
-                    <Button className="px-5 py-2.5 mt-10 font-medium ">
+                    <Button className="px-5 py-2.5 mt-6 ml-3 font-medium ">
                       Details Menu <View />
                     </Button>
                   </Link>

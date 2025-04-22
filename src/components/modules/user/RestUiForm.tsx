@@ -17,16 +17,13 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { updatePassword } from "@/services/Auth/authServices";
+import { resetPassword } from "@/services/Auth/authServices";
 import { useRouter } from "next/navigation";
 import LoadingButton from "@/components/ui/Loading/Loader";
 
 // Define validation schema
-const changePasswordSchema = z
+const ResetPasswordSchema = z
   .object({
-    currentPassword: z.string().min(8, {
-      message: "Current password must be at least 8 characters long",
-    }),
     newPassword: z
       .string()
       .min(8, {
@@ -49,32 +46,27 @@ const changePasswordSchema = z
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
-  })
-  .refine((data) => data.newPassword !== data.currentPassword, {
-    message: "Please use new another password",
-    path: ["newPassword"],
   });
 
-type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
+type ChangePasswordFormValues = z.infer<typeof ResetPasswordSchema>;
 
-export function ChangePasswordForm() {
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+export function RestUiForm({ token, email }: { token: string; email: string }) {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const form = useForm<ChangePasswordFormValues>({
-    resolver: zodResolver(changePasswordSchema),
+    resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
-      currentPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
   });
 
+  console.log(token, email);
   const router = useRouter();
   const onSubmit = async (data: ChangePasswordFormValues) => {
     const modifyData = {
-      oldPassword: data.currentPassword,
+      email: email,
       newPassword: data.newPassword,
     };
     const toastId = toast.loading("Update password ...........", {
@@ -82,10 +74,10 @@ export function ChangePasswordForm() {
     });
     console.log(modifyData);
     try {
-      const result = await updatePassword(modifyData);
+      const result = await resetPassword(modifyData, token);
       if (result?.success) {
         toast.success(result?.message, { id: toastId, duration: 2000 });
-        router.push("/dashboard");
+        router.push("/login");
       } else {
         toast.error(result?.message, { id: toastId, duration: 2000 });
       }
@@ -99,42 +91,10 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto box-shadow mb-5 p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto box-shadow mb-5  p-6 mt-5 md:mt-20 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-center">Change Password</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Current Password */}
-          <FormField
-            control={form.control}
-            name="currentPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Current Password</FormLabel>
-                <div className="relative">
-                  <FormControl>
-                    <Input
-                      type={showCurrentPassword ? "text" : "password"}
-                      placeholder="Enter current password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <button
-                    type="button"
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  >
-                    {showCurrentPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           {/* New Password */}
           <FormField
             control={form.control}
@@ -163,15 +123,6 @@ export function ChangePasswordForm() {
                   </button>
                 </div>
                 <FormMessage />
-                <div className="mt-2 text-sm text-gray-600">
-                  <p>Password must contain:</p>
-                  <ul className="list-disc pl-5">
-                    <li>At least 8 characters</li>
-                    <li>One uppercase letter</li>
-                    <li>One number</li>
-                    <li>One special character</li>
-                  </ul>
-                </div>
               </FormItem>
             )}
           />
@@ -191,6 +142,7 @@ export function ChangePasswordForm() {
                       {...field}
                     />
                   </FormControl>
+
                   <button
                     type="button"
                     className="absolute right-3 top-1/2 transform -translate-y-1/2"
@@ -207,7 +159,15 @@ export function ChangePasswordForm() {
               </FormItem>
             )}
           />
-
+          <div className="mt-2 text-sm text-gray-600">
+            <p>Password must contain:</p>
+            <ul className="list-disc pl-5">
+              <li>At least 8 characters</li>
+              <li>One uppercase letter</li>
+              <li>One number</li>
+              <li>One special character</li>
+            </ul>
+          </div>
           <Button type="submit" className="w-full cursor-pointer">
             {form.formState.isSubmitting ? (
               <LoadingButton />

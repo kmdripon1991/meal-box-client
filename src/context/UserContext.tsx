@@ -1,7 +1,7 @@
 "use client";
-import { getCurrentUser } from "@/services/Auth/authServices";
-import { IUser } from "@/types";
 
+import { getCurrentUser, getMe } from "@/services/Auth/authServices";
+import { IUser, TUser } from "@/types";
 import {
   createContext,
   Dispatch,
@@ -18,6 +18,10 @@ interface IUserProviderValues {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   isShop: boolean;
   setIsShop: Dispatch<SetStateAction<boolean>>;
+
+  myInfo: TUser | null;
+  setMyInfo: Dispatch<SetStateAction<null>>;
+
 }
 
 const UserContext = createContext<IUserProviderValues | undefined>(undefined);
@@ -27,18 +31,15 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isShop, setIsShop] = useState(false);
 
+  const [myInfo, setMyInfo] = useState(null);
+
   const handleUser = async () => {
     const user = await getCurrentUser();
+    const myInfoData = await getMe();
     console.log(user);
     setUser(user);
     setIsLoading(false);
-    // setIsLoading(true);
-    // try {
-    //   const userInfo = await getCurrentUser();
-    //   setUser(userInfo);
-    // } finally {
-    //   setIsLoading(false); // Always clear loading AFTER
-    // }
+    setMyInfo(myInfoData);
   };
 
   useEffect(() => {
@@ -47,7 +48,18 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, isLoading, setIsLoading, isShop, setIsShop }}
+
+      value={{
+        user,
+        setUser,
+        isLoading,
+        setIsLoading,
+        isShop,
+        setIsShop,
+        myInfo,
+        setMyInfo,
+      }}
+
     >
       {children}
     </UserContext.Provider>

@@ -244,7 +244,7 @@ const UpdateProfileForm = ({ data }: { data: TUser }) => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full cursor-pointer">
             {form.formState.isSubmitting ? <LoadingButton /> : "Update Profile"}
           </Button>
         </form>

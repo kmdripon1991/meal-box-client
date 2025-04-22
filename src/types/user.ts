@@ -4,10 +4,17 @@ export interface IUser {
   email: string;
   hasShop?: boolean;
   isActive?: boolean;
-  role: "customer" | "meal-provider" | "admin";
+  role?: "customer" | "meal-provider" | "admin" | undefined;
   iat?: number;
   exp?: number;
 }
+export type UserPayload = {
+  id: string;
+  emailOrPhone: string;
+  role: "mealProvider" | string; // you can narrow or expand roles here
+  iat: number;
+  exp: number;
+};
 
 export type TAddress = {
   village: string;
@@ -30,6 +37,7 @@ export type TUser = {
   role: "customer" | "admin" | "mealProvider"; // add more roles if needed
   isShop: boolean;
   isBlock: boolean;
+  profileImage: string;
   isDelete: boolean;
   createdAt: string; // ISO string
   updatedAt: string; // ISO string

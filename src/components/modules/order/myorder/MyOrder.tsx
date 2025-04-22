@@ -10,196 +10,87 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-} from "react";
 import SearchAndSort from "./SearchAndSort";
-import Image from "next/image";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const MyOrder = ({ orders }: { orders: any }) => {
-  console.log(orders);
+  console.log(orders.data);
+  const hasOrders = orders?.data?.length > 0;
+
   return (
     <div className="m-5 border p-2 rounded-md shadow-sm overflow-x-auto">
       <div className="mt-5">
         <SearchAndSort />
       </div>
-      <Table className="min-w-full">
-        <TableCaption>A list of your recent orders.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Shop Logo</TableHead>
-            <TableHead className="min-w-[120px]">Shop Name</TableHead>
-            <TableHead className="min-w-[120px]">Author Name</TableHead>
-            <TableHead className="min-w-[120px]">Shop C Number</TableHead>
-            <TableHead className="min-w-[100px]">Total Price</TableHead>
-            <TableHead className="min-w-[120px]">Payment Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {orders.data?.map(
-            (
-              order: {
-                id: any;
-                shopId: {
-                  shopLogo: string | Blob | undefined;
-                  shopName:
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | ReactPortal
-                    | Promise<
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | ReactPortal
-                        | ReactElement<
-                            unknown,
-                            string | JSXElementConstructor<any>
-                          >
-                        | Iterable<ReactNode>
-                        | null
-                        | undefined
-                      >
-                    | null
-                    | undefined;
-                  customerServiceContact:
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | ReactPortal
-                    | Promise<
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | ReactPortal
-                        | ReactElement<
-                            unknown,
-                            string | JSXElementConstructor<any>
-                          >
-                        | Iterable<ReactNode>
-                        | null
-                        | undefined
-                      >
-                    | null
-                    | undefined;
-                };
-                authorId: {
-                  fullName:
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | ReactPortal
-                    | Promise<
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | ReactPortal
-                        | ReactElement<
-                            unknown,
-                            string | JSXElementConstructor<any>
-                          >
-                        | Iterable<ReactNode>
-                        | null
-                        | undefined
-                      >
-                    | null
-                    | undefined;
-                };
-                total_price: number;
-                paymentStatus:
-                  | string
-                  | number
-                  | bigint
-                  | boolean
-                  | ReactElement<unknown, string | JSXElementConstructor<any>>
-                  | Iterable<ReactNode>
-                  | Promise<
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactPortal
-                      | ReactElement<
-                          unknown,
-                          string | JSXElementConstructor<any>
-                        >
-                      | Iterable<ReactNode>
-                      | null
-                      | undefined
-                    >
-                  | null
-                  | undefined;
-              },
-              index: any
-            ) => (
-              <TableRow key={order.id || `order-${index}`}>
-                <TableCell>
-                  {order?.shopId?.shopLogo && (
-                    // <img
-                    //   src={order?.shopId?.shopLogo}
-                    //   alt={`${order.shopId.shopName} logo`}
-                    //   width={40}
-                    //   height={40}
-                    //   className="rounded-full"
-                    // />
-                    <Image
-                      src={
-                        typeof order?.shopId?.shopLogo === "string"
-                          ? order?.shopId?.shopLogo
-                          : order?.shopId?.shopLogo
-                          ? URL.createObjectURL(order?.shopId?.shopLogo)
-                          : "/default-image.png" // Provide a default fallback image
-                      }
-                      alt={`${order?.shopId?.shopName || "Shop"} logo`}
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                      unoptimized // if the image is from an external URL and not in next.config.js
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {order.shopId.shopName}
-                </TableCell>
-                <TableCell>{order.authorId.fullName}</TableCell>
-                <TableCell>{order.shopId.customerServiceContact}</TableCell>
-                <TableCell>${order.total_price.toFixed(2)}</TableCell>
-                <TableCell>
-                  <span
-                    className={`px-2 py-1 rounded-md text-xs ${
-                      order.paymentStatus === "success"
-                        ? "bg-green-100 text-green-800"
-                        : order.paymentStatus === "pending"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : order.paymentStatus === "processing"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {order.paymentStatus}
-                  </span>
-                </TableCell>
+
+      {hasOrders ? (
+        <>
+          <Table className="min-w-full">
+            <TableCaption>A list of your recent orders.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Shop Logo</TableHead>
+                <TableHead className="min-w-[120px]">Shop Name</TableHead>
+                <TableHead className="min-w-[120px]">Author Name</TableHead>
+                <TableHead className="min-w-[120px]">Shop C Number</TableHead>
+                <TableHead className="min-w-[100px]">Total Price</TableHead>
+                <TableHead className="min-w-[120px]">Payment Status</TableHead>
+                <TableHead className="min-w-[120px]">Action</TableHead>
               </TableRow>
-            )
-          )}
-        </TableBody>
-      </Table>
-      <Pagination total={orders?.meta?.totalPage} />
+            </TableHeader>
+            <TableBody>
+              {orders?.data?.map((order: any, index: any) => (
+                <TableRow key={order.id || `order-${index}`}>
+                  <TableCell>
+                    <Avatar>
+                      <AvatarImage src={order?.shopId?.shopLogo} />
+                      <AvatarFallback>{order?.shopId?.shopName}</AvatarFallback>
+                    </Avatar>
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {order?.shopId?.shopName}
+                  </TableCell>
+                  <TableCell>{order?.authorId?.fullName}</TableCell>
+                  <TableCell>{order?.shopId?.customerServiceContact}</TableCell>
+                  <TableCell>${order?.total_price.toFixed(2)}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`px-2 py-1 rounded-md text-xs ${
+                        order.paymentStatus === "success"
+                          ? "bg-green-100 text-green-800"
+                          : order.paymentStatus === "pending"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : order.paymentStatus === "processing"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {order.paymentStatus}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/dashboard/order/order-details/${order._id}`}>
+                      <Button>Details</Button>
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <Pagination total={orders.meta.totalPage} />
+        </>
+      ) : (
+        <Card className="p-6 text-center my-4">
+          <h3 className="text-lg font-medium">No Orders Found</h3>
+          <p className="text-muted-foreground mt-2">
+            You don't have any orders yet. When you make an order, it will
+            appear here.
+          </p>
+        </Card>
+      )}
     </div>
   );
 };

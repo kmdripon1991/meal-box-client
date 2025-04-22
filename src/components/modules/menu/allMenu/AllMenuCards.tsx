@@ -52,7 +52,7 @@ export const AllMenuCard = ({ data }: { data: any }) => {
                 {/* Product Info */}
                 <div className="p-4 space-y-3">
                   <h2 className="text-lg font-semibold line-clamp-1">
-                    Shop Name : {menu.shopId?.shopName || "Untitled Menu"}
+                    {menu.shopId?.shopName || "Untitled Menu"}
                   </h2>
                   <p className="text-sm text-gray-400 line-clamp-2">
                     {menu.meals?.length || 0} days meal plan • Various delicious
