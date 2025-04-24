@@ -267,3 +267,26 @@ export const UploadImage = async (data: FormData) => {
     return Error(error);
   }
 };
+
+export const getAllUser = async () => {
+  const cookyStore = await cookies();
+  let token = cookyStore.get("access-token")!.value;
+  if (!token || (await isTokenExpired(token))) {
+    const { data } = await getNewToken();
+    token = data.accessToken;
+    cookyStore.set("access-token", token);
+  }
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+
+    return res.json();
+  } catch (error: any) {
+    return Error(error);
+  }
+};

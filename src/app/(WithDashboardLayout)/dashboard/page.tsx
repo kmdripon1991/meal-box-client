@@ -1,7 +1,7 @@
 import DashboardMain from "@/components/dashboard/main-dashboard/DashboardMain";
 import {} from "@/components/ui/breadcrumb";
 import {} from "@/components/ui/sidebar";
-import { getMe } from "@/services/Auth/authServices";
+import { getAllUser, getMe } from "@/services/Auth/authServices";
 import { getMyMenu } from "@/services/Menu/menuServices";
 import {
   getMealProviderOrder,
@@ -26,6 +26,7 @@ const Dashboard = async ({
   const myData = await getMyOrder(page);
   const userData = await getMe();
   const providerData = await getMyProvider();
+  const allUser = await getAllUser();
   return (
     <div>
       <DashboardMain
@@ -34,6 +35,7 @@ const Dashboard = async ({
         myData={myData}
         receivedOrders={receivedOrdersData}
         providerData={providerData}
+        allUser={allUser}
       />
     </div>
   );

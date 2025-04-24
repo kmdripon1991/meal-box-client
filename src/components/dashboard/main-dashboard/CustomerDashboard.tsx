@@ -86,9 +86,9 @@ export default function SimpleCustomerDashboard({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((order: any, index: string) => (
+              {data?.map((order: any, index: string) => (
                 <TableRow key={index}>
-                  <TableCell>{order.transactionId}</TableCell>
+                  <TableCell>{order?.transactionId}</TableCell>
                   <TableCell>{order.total_price}</TableCell>
                   <TableCell>
                     {order.paymentStatus === "Paid" ? "Delivered" : "Pending"}
@@ -99,7 +99,7 @@ export default function SimpleCustomerDashboard({
             </TableBody>
           </Table>
           <div className="flex justify-center py-10 border-t">
-            <Pagination total={meta.totalPage} />
+            <Pagination total={meta?.totalPage} />
           </div>
         </CardContent>
       </Card>

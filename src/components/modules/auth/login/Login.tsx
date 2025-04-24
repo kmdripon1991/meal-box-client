@@ -71,6 +71,7 @@ export function LoginForm() {
       return Error(error);
     }
   };
+  console.log(email);
   const handelForgetPassword = async () => {
     if (email) {
       const userEmail = {
@@ -79,8 +80,6 @@ export function LoginForm() {
       const result = await forgetPassword(userEmail);
       if (result.success) {
         toast.success(`${result.message} Please Check Email`);
-      } else {
-        toast.message("please input email");
       }
     }
   };

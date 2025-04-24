@@ -9,6 +9,7 @@ const publicRoutes = [
   "/api/auth",
   "/dashboard/menu/all-menu",
 ];
+const adminRoutes = ["/dashboard"];
 const mealProviderRoutes = [
   "/dashboard/order/meal-provider-order",
   "/dashboard",
@@ -68,7 +69,12 @@ export const middleware = async (request: NextRequest) => {
   if (authRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
-
+  if (userInfo.role === "admin") {
+    if (adminRoutes.includes(pathname)) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL("/", request.url));
+  }
   // 5. Role-based route protection
   if (userInfo.role === "mealProvider") {
     if (
