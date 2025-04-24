@@ -58,6 +58,7 @@ export default function MenuAddForm() {
   };
 
   const onSubmit = async (data: WeeklyMenuType) => {
+    const toastId = toast.loading("Menu creating.......", { duration: 3000 });
     try {
       const formData = new FormData();
       const menuPayload = {
@@ -86,10 +87,10 @@ export default function MenuAddForm() {
       }
       const result = await createMenuByProvider(formData);
       if (result?.success) {
-        toast.success(result?.message);
+        toast.success(result?.message, { duration: 3000, id: toastId });
         router.push("/dashboard/menu/my-menu");
       } else {
-        toast.error(result?.message);
+        toast.error(result?.message, { duration: 3000, id: toastId });
       }
     } catch (error: any) {
       return Error(error);

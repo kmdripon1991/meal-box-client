@@ -11,6 +11,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import MealProviderReceivedOrder from "@/components/modules/order/mealProviderRecivedOrder/MealProviderReceivedOrder";
+import Link from "next/link";
 
 export function MealProviderDashboard({
   menu,
@@ -30,9 +31,7 @@ export function MealProviderDashboard({
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-6">
       <header className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold text-purple-900">
-            Meal Provider Dashboard
-          </h1>
+          <h1 className="text-2xl font-bold">Meal Provider Dashboard</h1>
         </div>
         <div className="flex items-center gap-4">
           <Avatar>
@@ -46,7 +45,7 @@ export function MealProviderDashboard({
         {/* Overview Card */}
         <Card className="border-pink-200">
           <CardHeader>
-            <CardTitle className="text-pink-700">Today,s Meals</CardTitle>
+            <CardTitle className="">Today,s Meals</CardTitle>
             <CardDescription>Orders & Deliveries</CardDescription>
           </CardHeader>
           <CardContent>
@@ -69,14 +68,15 @@ export function MealProviderDashboard({
         {/* Menu Card */}
         <Card className="border-purple-200 md:col-span-2">
           <CardHeader>
-            <CardTitle className="text-purple-700">Today,s Menu</CardTitle>
+            <CardTitle className="">Today’s Menu</CardTitle>
             <CardDescription>Available meal options</CardDescription>
           </CardHeader>
           <CardContent>
-            {menu?.meals?.map(
-              (menuItem: any, index: string) =>
-                menuItem.day === today && (
+            {menu?.meals?.length > 0 ? (
+              menu.meals.map((menuItem: any, index: number) =>
+                menuItem.day === today ? (
                   <div key={index} className="space-y-6">
+                    {/* Morning */}
                     <div className="border-b pb-4">
                       <h3 className="text-lg font-medium text-gray-700">
                         Morning
@@ -86,7 +86,7 @@ export function MealProviderDashboard({
                         Price: {menuItem.morning.price}
                       </p>
                     </div>
-
+                    {/* Evening */}
                     <div className="border-b pb-4">
                       <h3 className="text-lg font-medium text-gray-700">
                         Evening
@@ -96,7 +96,7 @@ export function MealProviderDashboard({
                         Price: {menuItem.evening.price}
                       </p>
                     </div>
-
+                    {/* Night */}
                     <div>
                       <h3 className="text-lg font-medium text-gray-700">
                         Night
@@ -107,7 +107,18 @@ export function MealProviderDashboard({
                       </p>
                     </div>
                   </div>
-                )
+                ) : null
+              )
+            ) : (
+              <div className="text-center space-y-2">
+                <h1>Add Meals</h1>
+                <Link
+                  href="/dashboard/menu/create-menu"
+                  className="text-blue-500 underline"
+                >
+                  Go to Create Menu
+                </Link>
+              </div>
             )}
           </CardContent>
         </Card>
@@ -115,7 +126,7 @@ export function MealProviderDashboard({
         {/* Schedule Card */}
         <Card className="border-indigo-200">
           <CardHeader>
-            <CardTitle className="text-indigo-700">Delivery Schedule</CardTitle>
+            <CardTitle className="">Delivery Schedule</CardTitle>
             <CardDescription>Upcoming deliveries</CardDescription>
           </CardHeader>
           <CardContent>
@@ -130,7 +141,7 @@ export function MealProviderDashboard({
         {/* Orders Card */}
         <Card className="border-blue-200 md:col-span-2">
           <CardHeader>
-            <CardTitle className="text-blue-700">Recent Orders</CardTitle>
+            <CardTitle className="">Recent Orders</CardTitle>
           </CardHeader>
           <CardContent>
             <MealProviderReceivedOrder orders={receivedOrdersData} />

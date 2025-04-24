@@ -22,12 +22,11 @@ const MyOrder = ({ orders }: { orders: any }) => {
 
   return (
     <div className="m-5 border p-2 rounded-md shadow-sm overflow-x-auto">
-      <div className="mt-5">
-        <SearchAndSort />
-      </div>
-
       {hasOrders ? (
         <>
+          <div className="mt-5">
+            <SearchAndSort />
+          </div>
           <Table className="min-w-full">
             <TableCaption>A list of your recent orders.</TableCaption>
             <TableHeader>

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 const MyMenuPage = async () => {
   const { data } = await getMyMenu();
-  console.log(data);
+
   return (
     <div>
       <MyMenuCard data={data}></MyMenuCard>

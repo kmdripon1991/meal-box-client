@@ -11,9 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { TDailyMeal, TMealPlan } from "@/types";
 
 export function MyMenuCard({ data }: { data: TMealPlan }) {
-  console.log(data);
   const meals = data?.meals;
-
   // Empty state condition
   if (!meals || meals.length === 0) {
     return (

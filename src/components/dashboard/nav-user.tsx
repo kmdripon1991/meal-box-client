@@ -23,9 +23,11 @@ import { GiRamProfile } from "react-icons/gi";
 import Link from "next/link";
 import { logout } from "@/services/Auth/authServices";
 import { useUser } from "@/context/UserContext";
+import { TUser } from "@/types";
 
 export function NavUser({
   user,
+  userInfo,
 }: {
   user: {
     name: string;
@@ -33,6 +35,7 @@ export function NavUser({
     avatar: string;
     role: "customer" | "mealProvider";
   };
+  userInfo: TUser;
 }) {
   const { isMobile } = useSidebar();
 
@@ -54,7 +57,7 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src="/man.png" alt={user.name} />
+                <AvatarImage src={userInfo?.profileImage} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
                   {user.name
                     .split(" ")
@@ -77,7 +80,7 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={userInfo?.profileImage} alt={user.name} />
                   <AvatarFallback className="rounded-lg">
                     {user.name
                       .split(" ")

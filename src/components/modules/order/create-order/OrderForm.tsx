@@ -85,7 +85,7 @@ export function WeeklyMenuDisplay({ orders }: { orders: WeeklyMealPlan }) {
       orders,
     };
     console.log(orderData);
-    const toastId = toast.loading("Meal Creating......", { duration: 2000 });
+    const toastId = toast.loading("Order Creating......", { duration: 2000 });
     try {
       const result = await createOrder(orderData, "68015a739d1380a629e1c48e");
       console.log(result);

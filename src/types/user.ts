@@ -4,7 +4,7 @@ export interface IUser {
   email: string;
   hasShop?: boolean;
   isActive?: boolean;
-  role?: "customer" | "meal-provider" | "admin" | undefined;
+  role?: "customer" | "mealProvider" | "admin" | undefined;
   iat?: number;
   exp?: number;
 }
@@ -25,6 +25,7 @@ export type TAddress = {
 };
 
 export type TUser = {
+  name: any;
   _id: string;
   fullName: string;
   email: string;

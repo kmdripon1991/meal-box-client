@@ -239,3 +239,31 @@ export const getMe = async () => {
     return Error(error);
   }
 };
+
+export const UploadImage = async (data: FormData) => {
+  const cookieStore = await cookies();
+  let token = cookieStore.get("access-token")!.value;
+  if (!token || (await isTokenExpired(token))) {
+    const cookie = await getNewToken();
+    console.log("cookie data", cookie);
+    token = cookie?.accessToken;
+    cookieStore.set("access-token", token);
+  }
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/upload`, {
+      method: "POST",
+      headers: {
+        Authorization: token,
+      },
+      // credentials: "include",
+      body: data,
+    });
+    const result = await res.json();
+
+    return result;
+  } catch (error: any) {
+    console.error(error);
+    return Error(error);
+  }
+};

@@ -78,7 +78,7 @@ const Navbar1 = ({
     login: { title: "Login", url: "/login" },
   },
 }: Navbar1Props) => {
-  const { user, myInfo } = useUser();
+  const { user } = useUser();
   useEffect(() => {
     const justLoggedIn = sessionStorage.getItem("justLoggedIn");
     if (justLoggedIn) {
@@ -86,7 +86,7 @@ const Navbar1 = ({
       window.location.reload();
     }
   }, []);
-  console.log(myInfo?.profileImage);
+
   return (
     <section className="box-shadow py-4">
       <div className="max-w-5xl mx-auto px-5 ">

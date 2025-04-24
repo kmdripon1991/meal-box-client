@@ -13,12 +13,12 @@ export const SixCard = ({ data }: { data: any }) => {
   return (
     <>
       <div>
-        <h1 className="text-2xl md:text-4xl text-center pt-8  font-bold">
-          Menu Section
+        <h1 className="text-2xl md:text-4xl text-center pt-6 md:pt-10 font-bold">
+          Menu
         </h1>
-        <div className="max-w-md mx-auto border-b-2 mt-4 mb-8 border-[#424242]"></div>
+        <div className="max-w-md  mx-auto border-b-2 mt-4 mb-8 border-[#424242]"></div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 pt-8 md:pt-12 pb-10 md:pb-20 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {data?.map((menu: any, index: number) => {
           // Calculate total for this specific menu
           const menuTotal =
@@ -71,7 +71,7 @@ export const SixCard = ({ data }: { data: any }) => {
                   <div className=" mt-4">
                     <div className="flex flex-col gap-2 mt-4">
                       <Link href={`/details-menu/${menu._id}`}>
-                        <Button className="w-full ">
+                        <Button className="w-full cursor-pointer">
                           <IconDetails className="w-4 h-4 mr-1" />
                           Details
                         </Button>
@@ -80,7 +80,7 @@ export const SixCard = ({ data }: { data: any }) => {
 
                     <div className="flex flex-col gap-2 mt-4">
                       <Link href={`/dashboard/order/details-menu/${menu._id}`}>
-                        <Button className="w-full ">
+                        <Button className="w-full cursor-pointer">
                           <ShoppingCart className="w-4 h-4 mr-1" />
                           Order now
                         </Button>
@@ -93,13 +93,15 @@ export const SixCard = ({ data }: { data: any }) => {
           );
         })}
       </div>
-      <div className="flex justify-center py-10 md:py-20">
-        <Link href={"/dashboard/menu/all-menu"}>
-          <Button>
-            View All Menu <AlignLeft />
-          </Button>
-        </Link>
-      </div>
+      {data.leading < 6 && (
+        <div className="flex justify-center pt-10 md:pt-20">
+          <Link href={"/dashboard/menu/all-menu"}>
+            <Button className="cursor-pointer">
+              View All Menu <AlignLeft />
+            </Button>
+          </Link>
+        </div>
+      )}
     </>
   );
 };

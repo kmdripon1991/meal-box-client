@@ -147,7 +147,7 @@ export default function Slider({ sliderData }: { sliderData: any }) {
                     )}
                   </div>
                   <Link href={`/details-menu/${menu._id}`}>
-                    <Button className="px-5 py-2.5 mt-6 ml-3 font-medium ">
+                    <Button className="px-5 py-2.5 mt-6 ml-3 font-medium cursor-pointer">
                       Details Menu <View />
                     </Button>
                   </Link>

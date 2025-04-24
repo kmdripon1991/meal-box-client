@@ -70,10 +70,10 @@ export default function UpdateMenu({ data }: { data: TMealPlan }) {
     try {
       const result = await updateMyMenu(data);
       if (result?.success) {
-        toast.success(result?.message, { id: toastId, duration: 2000 });
+        toast.success(result?.message, { id: toastId, duration: 3000 });
         router.push("/dashboard/menu/my-menu");
       } else {
-        toast.error(result?.message, { id: toastId, duration: 2000 });
+        toast.error(result?.message, { id: toastId, duration: 3000 });
       }
     } catch (error: any) {
       toast.error("An error occurred while updating menu.", {

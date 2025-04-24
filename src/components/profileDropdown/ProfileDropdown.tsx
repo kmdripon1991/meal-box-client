@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,18 +12,34 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { LogIn } from "lucide-react";
 import { useUser } from "@/context/UserContext";
-import { logout } from "@/services/Auth/authServices";
+import { getMe, logout } from "@/services/Auth/authServices";
+import { TUser } from "@/types";
 
 const ProfileDropdown = () => {
   const { setIsLoading, user } = useUser();
-
   const handleLogout = () => {
     logout();
     setIsLoading(true);
-    // if (protectedRoutes.some((route) => pathname.match(route))) {
-    //   router.push("/");
-    // }
   };
+
+  const [data, setData] = useState<TUser>();
+  console.log(user);
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await getMe();
+      setData(data);
+    };
+
+    fetchData();
+  }, []);
+  const imgSrc = data?.profileImage || "https://github.com/shadcn.png";
+  const initials = data?.name
+    ? data.name
+        .split(" ")
+        .map((n: any[]) => n[0])
+        .join("")
+        .toUpperCase()
+    : "SN";
   return (
     <div>
       <DropdownMenu>
@@ -31,10 +47,12 @@ const ProfileDropdown = () => {
           className="cursor-pointer border-none focus:outline-none focus:ring-0 focus:border-none active:border-none"
           asChild
         >
-          <Avatar className="border-none">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>SN</AvatarFallback>
-          </Avatar>
+          {user?.role && (
+            <Avatar className="border-none">
+              <AvatarImage src={imgSrc} />
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent className="mt-5  text-black w-[200px]">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>

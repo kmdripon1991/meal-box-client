@@ -6,6 +6,7 @@ export type TMealItem = {
 };
 
 export type TDailyMeal = {
+  length: number;
   day: string;
   morning: TMealItem | null;
   evening: TMealItem | null;

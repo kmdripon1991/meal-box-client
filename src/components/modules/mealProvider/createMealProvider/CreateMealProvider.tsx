@@ -87,6 +87,9 @@ const CreateMealProviderForm = () => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const toastId = toast.loading("Meal Provider Creating.........", {
+      duration: 3000,
+    });
     const payloadData = {
       shopName: data.shopName,
       ownerName: data.ownerName,
@@ -142,11 +145,11 @@ const CreateMealProviderForm = () => {
       const result = await createProvider(formData);
       if (result?.success) {
         //  setIsShop(true);
-        toast.success(result?.message);
+        toast.success(result?.message, { duration: 3000, id: toastId });
         await logout();
         router.push("/login");
       } else {
-        toast.error(result?.message);
+        toast.error(result?.message, { duration: 3000, id: toastId });
       }
     } catch (error: any) {
       return Error(error);
