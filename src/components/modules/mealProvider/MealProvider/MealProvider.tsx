@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { BsShop } from "react-icons/bs";
 import {
   FaFacebookF,
   FaInstagram,
@@ -13,19 +14,38 @@ import {
   FaUserTie,
   FaStar,
 } from "react-icons/fa";
+import { IoLocation } from "react-icons/io5";
 
 const ShopInfoCard = ({ data }: { data: any }) => {
   return (
-    <section className="mx-5 mb-5 box-shadow rounded-sm">
-      <div className="max-w-6xl mx-auto bg-white rounded-2xl  shadow-lg p-8 sm:p-10 md:p-12 mb-10">
-        <div className="flex items-center gap-5 mb-6">
-          <img
+    <section className="mx-5 mb-5 box-shadow rounded-md">
+      <div className="bg-gradient-to-r from-[#424242] rounded-t-md to-[#424242d3] h-32 p-6 relative">
+        <div className="absolute -bottom-12 left-6">
+          <div className="h-[105px] w-28 rounded-full border-2 border-white bg-white flex items-center justify-center shadow-lg">
+            <Image
+              src={data?.shopLogo}
+              alt="Shop Logo"
+              width={150}
+              height={50}
+              style={{ width: "150px", height: "100px", borderRadius: "100%" }}
+              // OR with Tailwind:
+              // className="w-[150px] h-[50px]"
+            />
+          </div>
+        </div>
+      </div>
+      {/* <div className="bg-indigo-600">
+        <div className="flex  items-center gap-5 mb-6">
+          <Image
             src={data?.shopLogo}
             alt="Shop Logo"
-            width={100}
-            height={100}
-            className=" border rounded-full"
+            width={150}
+            height={50}
+            style={{ width: "100px", height: "100px", borderRadius: "100%" }}
+            // OR with Tailwind:
+            // className="w-[150px] h-[50px]"
           />
+
           <div>
             <h2 className="text-3xl font-bold text-gray-800">
               {data?.shopName}
@@ -33,8 +53,20 @@ const ShopInfoCard = ({ data }: { data: any }) => {
             <p className="text-gray-500">{data?.shopAddress}</p>
           </div>
         </div>
-        <div className="border-t-2 pb-4 -mt-3 border-gray-900"></div>
-        <div className="grid md:grid-cols-2 gap-10 text-gray-700">
+      </div> */}
+      <div className="max-w-6xl  mx-auto bg-white rounded-2xl  shadow-lg p-8 sm:p-10 md:p-12 mb-10">
+        <div className="py-5 border-[#424242] border-b-2">
+          <h1 className="text-2xl font-bold flex gap-2 items-center text-gray-900">
+            <BsShop /> {data?.shopName}
+          </h1>
+          <div className="flex items-center mt-2">
+            <IoLocation className="text-2xl" />
+            <span className="ml-2 text-sm font-medium text-gray-500 capitalize">
+              {data.shopAddress}
+            </span>
+          </div>
+        </div>
+        <div className="grid pt-4  md:grid-cols-2 gap-10 text-gray-700">
           <div className="space-y-5">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Owner</h3>

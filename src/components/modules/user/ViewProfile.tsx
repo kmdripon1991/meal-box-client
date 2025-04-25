@@ -9,9 +9,10 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { TUser } from "@/types";
+import Image from "next/image";
+import ChangeProfileImage from "./UploadProfileImage";
 
 const ViewProfile = ({ data }: { data: TUser }) => {
-  console.log(data);
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -19,16 +20,33 @@ const ViewProfile = ({ data }: { data: TUser }) => {
       day: "numeric",
     });
   };
-
+  console.log(data?.profileImage);
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6">
+    <div className="max-w-4xl mx-auto p-4 md:p-6 ">
       {/* Profile Card */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="bg-white rounded-xl shadow-md overflow-hidden box-shadow">
         {/* Profile Header */}
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 h-32 p-6 relative">
+        <div className="bg-gradient-to-r from-[#424242] rounded-t-md to-[#424242d3] h-32 p-6 relative">
           <div className="absolute -bottom-12 left-6">
-            <div className="h-24 w-24 rounded-full border-4 border-white bg-white flex items-center justify-center shadow-lg">
-              <UserIcon className="h-12 w-12 text-indigo-600" />
+            <div className="h-[105px] relative w-28 rounded-full border-2 border-white bg-white flex items-center justify-center shadow-lg">
+              {data.profileImage ? (
+                <Image
+                  src={data?.profileImage}
+                  alt="Shop Logo"
+                  width={150}
+                  height={50}
+                  style={{
+                    width: "150px",
+                    height: "100px",
+                    borderRadius: "100%",
+                  }}
+                />
+              ) : (
+                <UserIcon className="h-12 w-12 text-indigo-600" />
+              )}
+            </div>
+            <div className="bg-slate-300 absolute -right-1 bottom-2 rounded-full w-[40px] h-[40px] border-white border">
+              <ChangeProfileImage />
             </div>
           </div>
         </div>

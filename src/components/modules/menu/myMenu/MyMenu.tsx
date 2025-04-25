@@ -12,7 +12,6 @@ import { TDailyMeal, TMealPlan } from "@/types";
 
 export function MyMenuCard({ data }: { data: TMealPlan }) {
   const meals = data?.meals;
-
   // Empty state condition
   if (!meals || meals.length === 0) {
     return (

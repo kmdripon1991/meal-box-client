@@ -25,6 +25,7 @@ import { createProvider } from "@/services/Provider/providerSurvices";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import LoadingButton from "@/components/ui/Loading/Loader";
+import { logout } from "@/services/Auth/authServices";
 
 const DAYS_OF_WEEK = [
   "Monday",
@@ -86,6 +87,9 @@ const CreateMealProviderForm = () => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const toastId = toast.loading("Meal Provider Creating.........", {
+      duration: 3000,
+    });
     const payloadData = {
       shopName: data.shopName,
       ownerName: data.ownerName,
@@ -130,7 +134,6 @@ const CreateMealProviderForm = () => {
         : [],
     };
 
-    
     try {
       const formData = new FormData();
       formData.append("data", JSON.stringify(payloadData));
@@ -142,11 +145,11 @@ const CreateMealProviderForm = () => {
       const result = await createProvider(formData);
       if (result?.success) {
         //  setIsShop(true);
-        toast.success(result?.message);
-
-        router.push("/dashboard");
+        toast.success(result?.message, { duration: 3000, id: toastId });
+        await logout();
+        router.push("/login");
       } else {
-        toast.error(result?.message);
+        toast.error(result?.message, { duration: 3000, id: toastId });
       }
     } catch (error: any) {
       return Error(error);

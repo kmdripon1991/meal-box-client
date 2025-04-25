@@ -14,7 +14,6 @@ import {
 
 export const Testimonial = ({ mealProvider }: { mealProvider: any }) => {
   const mealProviderData = mealProvider?.data?.data || [];
-  console.log(mealProviderData);
 
   const renderStars = (rating: number) => {
     const validRating = Math.min(5, Math.max(0, Number(rating) || 0));
@@ -41,12 +40,14 @@ export const Testimonial = ({ mealProvider }: { mealProvider: any }) => {
 
   return (
     <div>
-      <div>
-        <h1 className="text-2xl md:text-4xl text-center  font-bold">
-          Testimonial Section
-        </h1>
-        <div className="max-w-md mx-auto border-b-2 mt-4  border-[#424242]"></div>
-      </div>
+      {mealProviderData.length > 0 && (
+        <div>
+          <h1 className="text-2xl md:text-4xl text-center  font-bold">
+            Testimonial Section
+          </h1>
+          <div className="max-w-md mx-auto border-b-2 mt-4  border-[#424242]"></div>
+        </div>
+      )}
       <Swiper
         pagination={{
           dynamicBullets: true,

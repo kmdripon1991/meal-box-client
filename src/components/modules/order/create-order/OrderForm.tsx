@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { WeeklyMealPlan } from "@/types";
 import { useForm } from "react-hook-form";
+import { BiSolidFoodMenu } from "react-icons/bi";
+
 import {
   Form,
   FormControl,
@@ -16,7 +18,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createOrder } from "@/services/Order/orderServices";
 import OrderInstruction from "./OrderInstruction";
-import Image from "next/image";
 import LoadingButton from "@/components/ui/Loading/Loader";
 
 interface FormData {
@@ -34,24 +35,13 @@ interface FormData {
   >;
 }
 
-// const dayColors = {
-//   Saturday:
-//     "bg-gradient-to-br from-amber-200 box-shadow via-yellow-100 to-amber-300 border-amber-400",
-//   Sunday:
-//     "bg-gradient-to-br from-blue-200 box-shadow via-cyan-100 to-blue-300 border-blue-400",
-//   Monday:
-//     "bg-gradient-to-br from-emerald-200 box-shadow via-green-100 to-emerald-300 border-emerald-400",
-//   Tuesday:
-//     "bg-gradient-to-br from-violet-200 box-shadow via-purple-100 to-violet-300 border-violet-400",
-//   Wednesday:
-//     "bg-gradient-to-br from-rose-200 box-shadow via-pink-100 to-rose-300 border-rose-400",
-//   Thursday:
-//     "bg-gradient-to-br from-indigo-200 box-shadow via-blue-100 to-indigo-300 border-indigo-400",
-//   Friday:
-//     "bg-gradient-to-br from-fuchsia-200 box-shadow via-pink-100 to-fuchsia-300 border-fuchsia-400",
-// };
-
-export function WeeklyMenuDisplay({ orders }: { orders: WeeklyMealPlan }) {
+export function WeeklyMenuDisplay({
+  orders,
+  orderId,
+}: {
+  orders: WeeklyMealPlan;
+  orderId: string;
+}) {
   const form = useForm<FormData>();
   const allMeals = orders?.meals;
   const calculateTotal = () => {
@@ -101,9 +91,9 @@ export function WeeklyMenuDisplay({ orders }: { orders: WeeklyMealPlan }) {
       orders,
     };
     console.log(orderData);
-    const toastId = toast.loading("Meal Creating......", { duration: 2000 });
+    const toastId = toast.loading("Order Creating......", { duration: 2000 });
     try {
-      const result = await createOrder(orderData, "68015a739d1380a629e1c48e");
+      const result = await createOrder(orderData, orderId);
       console.log(result);
       if (result?.success) {
         toast.success(result?.message, { id: toastId, duration: 2000 });
@@ -151,12 +141,7 @@ export function WeeklyMenuDisplay({ orders }: { orders: WeeklyMealPlan }) {
               >
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold">{day.day}</h2>
-                  <Image
-                    src="/logo.png"
-                    width={25}
-                    height={25}
-                    alt="Picture of the author"
-                  />
+                  <BiSolidFoodMenu className="text-2xl" />
                 </div>
 
                 {(["morning", "evening", "night"] as const).map((mealTime) => {
@@ -238,7 +223,7 @@ export function WeeklyMenuDisplay({ orders }: { orders: WeeklyMealPlan }) {
                 <p className="text-2xl font-bold">৳{calculateTotal()}</p>
               </div>
             </div>
-            <Button type="submit" className="w-full mt-4">
+            <Button type="submit" className="w-full mt-4 cursor-pointer">
               {form.formState.isSubmitting ? (
                 <LoadingButton />
               ) : (

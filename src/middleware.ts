@@ -1,14 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "./services/Auth/authServices";
 
+// Define route groups
+const publicRoutes = [
+  "/",
+  "/login",
+  "/signup",
+  "/api/auth",
+  "/dashboard/menu/all-menu",
+  "/about-meal-provider",
+];
+const adminRoutes = [
+  "/dashboard",
+  "/dashboard/admin/all-user-status-change",
+  "/dashboard/admin/delete-menu",
+  "/about-meal-provider",
+];
+const mealProviderRoutes = [
+  "/dashboard/order/meal-provider-order",
+  "/dashboard",
+  "/dashboard/menu/create-menu",
+  "/dashboard/menu/my-menu",
+  "/dashboard/menu/update-menu",
+  "/dashboard/meal-provider/my-meal-provider",
+  "/dashboard/meal-provider/update-meal-provider",
+  "/dashboard/menu/all-menu",
+  "/dashboard/order/my-order",
+  "/about-meal-provider",
+];
+const customerRoutes = [
+  "/create-meal-provider",
+  "/dashboard",
+  "/dashboard/order/my-order",
+  "/dashboard/menu/all-menu",
+  "/about-meal-provider",
+];
+const profileRoutes = [
+  "/dashboard/user/view-profile",
+  "/dashboard/user/update-profile",
+  "/dashboard/user/change-password",
+];
 const authRoutes = ["/login", "/signup"];
-const publicRoutes = ["/", "/login", "/signup", "/api/auth"];
 const staticPaths = ["/_next/", "/favicon.ico", "/assets/"];
 
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
 
-  // 1. First skip all static files and API routes
+  // 1. Allow static files and API routes
   if (
     staticPaths.some((path) => pathname.startsWith(path)) ||
     pathname.startsWith("/api/") ||
@@ -17,50 +55,67 @@ export const middleware = async (request: NextRequest) => {
     return NextResponse.next();
   }
 
-  // 2. Then handle public routes
-  if (publicRoutes.includes(pathname)) {
+  // 2. Allow all public routes and dynamic public paths
+  if (
+    publicRoutes.includes(pathname) ||
+    pathname.startsWith("/details-menu/") ||
+    pathname.startsWith("/reset-ui")
+  ) {
     return NextResponse.next();
   }
 
-  // 3. Finally check authentication
+  // 3. Get authenticated user
   const userInfo = await getCurrentUser();
-  //   const userInfo = null;
 
   if (!userInfo) {
-    return NextResponse.redirect(
-      new URL(`/login?redirectPath=${pathname}`, request.url)
-    );
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirectPath", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Prevent auth route access when logged in
+  // 4. Block authenticated users from accessing login/signup
   if (authRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
+  if (userInfo.role === "admin") {
+    if (adminRoutes.includes(pathname) || profileRoutes.includes(pathname)) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+  // 5. Role-based route protection
+  if (userInfo.role === "mealProvider") {
+    if (
+      mealProviderRoutes.includes(pathname) ||
+      profileRoutes.includes(pathname) ||
+      pathname.startsWith("/dashboard/order/details-menu/") ||
+      pathname.startsWith("/dashboard/order/order-details/")
+    ) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
+  if (userInfo.role === "customer") {
+    if (
+      customerRoutes.includes(pathname) ||
+      profileRoutes.includes(pathname) ||
+      pathname.startsWith("/dashboard/order/details-menu/") ||
+      pathname.startsWith("/dashboard/order/order-details/")
+    ) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Default allow
   return NextResponse.next();
 };
 
 export const config = {
   matcher: [
     "/create-meal-provider",
-    "/dashboard",
-    "/dashboard/menu/create-menu",
-    "/dashboard/menu/my-menu",
-    "/dashboard/menu/update-menu",
-    "/dashboard/order/my-order",
-    "/dashboard/order/meal-provider-order",
-    "/dashboard/meal-provider/my-meal-provider",
-    "/dashboard/meal-provider/update-meal-provider",
-    "/dashboard/user/view-profile",
-    "/dashboard/user/update-profile",
-    "/dashboard/user/change-password",
-
-    /*
-     * Match all paths except:
-     * - API routes
-     * - Static files
-     * - Auth routes (they have their own logic)
-     */
+    "/dashboard/:path*",
     "/((?!api|_next/static|_next/image|favicon.ico|assets).*)",
   ],
 };

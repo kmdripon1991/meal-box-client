@@ -64,7 +64,45 @@ export const getCurrentUser = async () => {
     return null;
   }
 };
+export const forgetPassword = async (data: any) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/forget-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    return res.json();
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+export const resetPassword = async (data: FieldValues, sortToken: string) => {
+  (await cookies()).set("access-token", sortToken);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access-token")!.value;
 
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    return res.json();
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
 // export const getMe = async () => {
 //   const cookyStore = await cookies();
 //   let token = cookyStore.get("access-token")!.value;
@@ -197,6 +235,83 @@ export const getMe = async () => {
     console.log(result);
 
     return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const UploadImage = async (data: FormData) => {
+  const cookieStore = await cookies();
+  let token = cookieStore.get("access-token")!.value;
+  if (!token || (await isTokenExpired(token))) {
+    const cookie = await getNewToken();
+    console.log("cookie data", cookie);
+    token = cookie?.accessToken;
+    cookieStore.set("access-token", token);
+  }
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/upload`, {
+      method: "POST",
+      headers: {
+        Authorization: token,
+      },
+      // credentials: "include",
+      body: data,
+    });
+    const result = await res.json();
+
+    return result;
+  } catch (error: any) {
+    console.error(error);
+    return Error(error);
+  }
+};
+
+export const getAllUser = async () => {
+  const cookyStore = await cookies();
+  let token = cookyStore.get("access-token")!.value;
+  if (!token || (await isTokenExpired(token))) {
+    const { data } = await getNewToken();
+    token = data.accessToken;
+    cookyStore.set("access-token", token);
+  }
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    });
+
+    return res.json();
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+export const changeUserStatus = async (blockUserData: any) => {
+  const cookyStore = await cookies();
+  let token = cookyStore.get("access-token")!.value;
+  if (!token || (await isTokenExpired(token))) {
+    const { data } = await getNewToken();
+    token = data.accessToken;
+    cookyStore.set("access-token", token);
+  }
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/change-user-status`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(blockUserData),
+      }
+    );
+
+    return res.json();
   } catch (error: any) {
     return Error(error);
   }

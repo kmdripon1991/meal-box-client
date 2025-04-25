@@ -81,6 +81,7 @@ interface MenuData {
 }
 
 const DetailsMenu: React.FC<{ menu?: MenuData }> = ({ menu }) => {
+  console.log(menu);
   if (!menu) return <div className="text-center py-10">Loading menu...</div>;
   console.log(menu);
   return (

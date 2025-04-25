@@ -91,6 +91,9 @@ const UpdateMealProviderForm = ({ data }: { data: any }) => {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const toastId = toast.loading("Updata Meal Provider..........", {
+      duration: 3000,
+    });
     const productCategories = data.productCategories.map(
       (product) => product.value
     );
@@ -110,10 +113,10 @@ const UpdateMealProviderForm = ({ data }: { data: any }) => {
       const result = await updateProvider(formData);
       console.log(result);
       if (result?.success) {
-        toast.success(result?.message);
+        toast.success(result?.message, { duration: 3000, id: toastId });
         router.push("/dashboard/meal-provider/my-meal-provider");
       } else {
-        toast.error(result?.message);
+        toast.error(result?.message, { duration: 3000, id: toastId });
       }
     } catch (error: any) {
       return Error(error);

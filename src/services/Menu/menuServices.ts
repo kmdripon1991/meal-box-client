@@ -32,7 +32,7 @@ export const createMenuByProvider = async (MenuData: FormData) => {
 export const getAllMenus = async (page?: string) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/menu?page=${page}&limit=3`,
+      `${process.env.NEXT_PUBLIC_API_URL}/menu?page=${page}&limit=6`,
       {
         method: "GET",
         headers: {
@@ -95,14 +95,17 @@ export const updateMyMenu = async (payload: any) => {
     cookyStore.set("access-token", token);
   }
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu/my-menu`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(payload),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/menu/update-menu`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     return res.json();
   } catch (error: any) {
@@ -111,6 +114,24 @@ export const updateMyMenu = async (payload: any) => {
 };
 
 export const getSingleMenu = async (menuId: string) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/menu/${menuId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res.json();
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+export const menuDelete = async (id: string) => {
   const cookyStore = await cookies();
   let token = cookyStore.get("access-token")!.value;
   if (!token || (await isTokenExpired(token))) {
@@ -120,9 +141,9 @@ export const getSingleMenu = async (menuId: string) => {
   }
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/menu/${menuId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/menu/delete-menu/${id}`,
       {
-        method: "GET",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: token,

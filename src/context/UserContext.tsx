@@ -16,8 +16,6 @@ interface IUserProviderValues {
   isLoading: boolean;
   setUser: (user: IUser | null) => void;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  isShop: boolean;
-  setIsShop: Dispatch<SetStateAction<boolean>>;
 }
 
 const UserContext = createContext<IUserProviderValues | undefined>(undefined);
@@ -25,20 +23,13 @@ const UserContext = createContext<IUserProviderValues | undefined>(undefined);
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isShop, setIsShop] = useState(false);
 
   const handleUser = async () => {
     const user = await getCurrentUser();
+
     console.log(user);
     setUser(user);
     setIsLoading(false);
-    // setIsLoading(true);
-    // try {
-    //   const userInfo = await getCurrentUser();
-    //   setUser(userInfo);
-    // } finally {
-    //   setIsLoading(false); // Always clear loading AFTER
-    // }
   };
 
   useEffect(() => {
@@ -47,7 +38,12 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, setUser, isLoading, setIsLoading, isShop, setIsShop }}
+      value={{
+        user,
+        setUser,
+        isLoading,
+        setIsLoading,
+      }}
     >
       {children}
     </UserContext.Provider>

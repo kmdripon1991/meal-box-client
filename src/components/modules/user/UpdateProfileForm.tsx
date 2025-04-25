@@ -68,10 +68,10 @@ const UpdateProfileForm = ({ data }: { data: TUser }) => {
     try {
       const result = await updateProfile(data);
       if (result?.success) {
-        toast.success(result?.message, { id: toastId, duration: 2000 });
+        toast.success(result?.message, { id: toastId, duration: 3000 });
         router.push("/dashboard/user/view-profile");
       } else {
-        toast.error(result?.message, { id: toastId, duration: 2000 });
+        toast.error(result?.message, { id: toastId, duration: 3000 });
       }
     } catch (error: any) {
       toast.error("An error occurred while updating profile.", {
@@ -244,7 +244,7 @@ const UpdateProfileForm = ({ data }: { data: TUser }) => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full cursor-pointer">
             {form.formState.isSubmitting ? <LoadingButton /> : "Update Profile"}
           </Button>
         </form>
