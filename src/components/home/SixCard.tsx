@@ -12,7 +12,7 @@ import { IconDetails } from "@tabler/icons-react";
 export const SixCard = ({ data }: { data: any }) => {
   return (
     <>
-      {data.length > 0 && (
+      {data?.length > 0 && (
         <div>
           <h1 className="text-2xl md:text-4xl text-center pt-6 md:pt-10 font-bold">
             Menu

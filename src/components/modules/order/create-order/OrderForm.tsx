@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import { toast } from "sonner";
 import { createOrder } from "@/services/Order/orderServices";
 import OrderInstruction from "./OrderInstruction";
 import LoadingButton from "@/components/ui/Loading/Loader";
+import { useEffect, useState } from "react";
 
 interface FormData {
   days: Record<
@@ -42,10 +44,14 @@ export function WeeklyMenuDisplay({
   orders: WeeklyMealPlan;
   orderId: string;
 }) {
+  const [totalAmount, setUserTotalAmount] = useState<number>();
+
+  console.log(totalAmount);
   const form = useForm<FormData>();
   const allMeals = orders?.meals;
   const calculateTotal = () => {
     let total = 0;
+
     const formData = form.getValues();
 
     allMeals.forEach((day) => {
@@ -61,6 +67,9 @@ export function WeeklyMenuDisplay({
 
     return total;
   };
+  useEffect(() => {
+    return setUserTotalAmount(calculateTotal());
+  }, [form.watch(), allMeals]); // You
   const router = useRouter();
   const onSubmit = async (data: FormData) => {
     const orders = allMeals.map((day) => {
@@ -99,9 +108,7 @@ export function WeeklyMenuDisplay({
         toast.success(result?.message, { id: toastId, duration: 2000 });
         setTimeout(() => {
           router.push(result.data.paymentUrl);
-        }, 2000);
-
-        // router.push(result.data.paymentUrl);
+        }, 1000);
       } else {
         toast.error(result?.message, { id: toastId, duration: 2000 });
       }
@@ -226,7 +233,13 @@ export function WeeklyMenuDisplay({
                 <p className="text-2xl font-bold">৳{calculateTotal()}</p>
               </div>
             </div>
-            <Button type="submit" className="w-full mt-4 cursor-pointer">
+            <Button
+              type="submit"
+              disabled={
+                form.formState.isSubmitting || (totalAmount as number) <= 0
+              }
+              className="w-full mt-4 cursor-pointer"
+            >
               {form.formState.isSubmitting ? (
                 <LoadingButton />
               ) : (

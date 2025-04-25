@@ -2,6 +2,7 @@
 "use client";
 
 import * as React from "react";
+import { useEffect, useState } from "react";
 import {
   AudioWaveform,
   BookOpen,
@@ -13,6 +14,7 @@ import {
   PieChart,
   SquareTerminal,
 } from "lucide-react";
+import { FaProductHunt } from "react-icons/fa";
 
 import {
   Sidebar,
@@ -23,7 +25,6 @@ import {
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
-import { useEffect, useState } from "react";
 import { getMe } from "@/services/Auth/authServices";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -38,7 +39,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     getUser();
   }, []);
 
-  // 🔐 Conditionally render navigation menu
+  // 🔐 Conditionally render navigation menu based on user role
   const navMain = [
     {
       title: "Dashboard",
@@ -60,6 +61,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {
                 title: "My menu",
                 url: "/dashboard/menu/my-menu",
+              },
+              {
+                title: "All Menu",
+                url: "/dashboard/menu/all-menu",
               },
               {
                 title: "Update my menu",
@@ -84,7 +89,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
         ]
       : []),
-
     ...(userInfo?.role === "admin"
       ? [
           {
@@ -107,13 +111,37 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 title: "Menu Delete",
                 url: "/dashboard/admin/delete-menu",
               },
+              {
+                title: "All Menu",
+                url: "/dashboard/menu/all-menu",
+              },
             ],
+          },
+        ]
+      : []),
+    ...(userInfo?.role === "customer"
+      ? [
+          {
+            title: "Order",
+            url: "#",
+            icon: Bot,
+            items: [
+              {
+                title: "My Order",
+                url: "/dashboard/order/my-order",
+              },
+            ],
+          },
+          {
+            title: "All Menu",
+            url: "/dashboard/menu/all-menu",
+            icon: FaProductHunt,
           },
         ]
       : []),
   ];
 
-  // 🧠 All Sidebar Data
+  // 🧠 Sidebar data configuration
   const data = {
     user: {
       name: userInfo?.fullName || "",
@@ -161,15 +189,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        {/* You can add a TeamSwitcher or App Logo here if needed */}
+        {/* TeamSwitcher or App Logo can be placed here */}
       </SidebarHeader>
+
       <SidebarContent>
+        {/* @ts-expect-error item */}
         <NavMain items={data.navMain} />
       </SidebarContent>
+
       <SidebarFooter />
       <SidebarFooter>
         <NavUser user={data.user} userInfo={userInfo} />
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   );
